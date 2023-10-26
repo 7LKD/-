@@ -70,6 +70,7 @@ history: createWebHistory(),
                     path:'/test',
                     component:test
                 },
+                {path:'/detail' ,component:()=> import("../views/blogsys/detail.vue")},
                 {
                     path:'/dashboard',
                     component:dashboard,

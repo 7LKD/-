@@ -2,8 +2,8 @@
   <br>
   <div>
     <h1>帖子管理一蹦子</h1>
-    <n-tabs default-value="oasis" justify-content="start" type="line">
-      <n-tab-pane name="oasis" tab="帖子列表">
+    <n-tabs v-model:value="tabValue" justify-content="start" type="line">
+      <n-tab-pane name="list" tab="帖子列表">
         <div v-for="(blog,index) in blogListinfo"  style="margin-bottom:15px">
           <n-card :title="blog.title">
             {{ blog.content }}
@@ -11,8 +11,8 @@
             <template #footer>
               <n-space align="center">
                 <div>发布时间: {{blog.create_time}}</div>
-                <n-button>删除</n-button>
-                <n-button>修改</n-button>
+                <n-button @click="toDelete(blog)">删除</n-button>
+                <n-button @click="toUpdate(blog)">修改</n-button>
               </n-space>
             </template>
             
@@ -101,6 +101,7 @@ const updateArticle = reactive({
 
 const categoryOptions = ref([])
 const blogListinfo = ref([])
+const tabValue = ref("list")
 
 const pageInfo = reactive({
     page: 1,
@@ -156,6 +157,37 @@ const add = async () =>{
 const toPage= async(pageNum)=>{
   pageInfo.page = pageNum;
   loadBlogs()
+}
+
+const toUpdate =async (blog)=>{
+  tabValue.value = "update"
+  let res = await axios.get("/blog/detail?id=" + blog.id)
+  // console.log(res)
+  updateArticle.id = blog.id
+  updateArticle.content = res.data.rows[0].content
+  updateArticle.title = res.data.rows[0].title
+  updateArticle.categoryId = res.data.rows[0].category_id
+}
+
+const update = async ()=>{
+  let res = await axios.put("/blog/_token/update",updateArticle)
+  if(res.data.code == 200){
+    message.success(res.data.msg);
+    tabValue.value = "list" 
+    loadBlogs()
+  }else{
+    message.error(res.data.msg);
+  }
+}
+
+const toDelete = async (blog)=>{
+  let res = await axios.delete("/blog/_token/delete?id="+blog.id)
+  if(res.data.code == 200){
+    message.success(res.data.msg);
+    loadBlogs()
+  }else{
+    message.error(res.data.msg);
+  }
 }
 </script>
 
