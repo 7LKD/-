@@ -61,8 +61,8 @@ router.post('/search', async (req, res) => {
     // console.log(params)
     // console.log(whereSqlStr)
     //查找分页数据
-    let searchSql = "SELECT `id`,`category_id`,`create_time`,`title`,substr(`content`,0,50) AS `content` FROM `blog` " + whereSqlStr + " ORDER BY `create_time` DESC LIMIT ?,?"
-    // let searchSql = "SELECT * FROM `blog` " + whereSqlStr + " ORDER BY `create_time` DESC LIMIT ?,?"
+    // let searchSql = "SELECT `id`,`category_id`,`create_time`,`title`,substr(`content`,0,50) AS `content` FROM `blog` " + whereSqlStr + " ORDER BY `create_time` DESC LIMIT ?,?"
+    let searchSql = "SELECT * FROM `blog` " + whereSqlStr + " ORDER BY `create_time` DESC LIMIT ?,?"
     let searchSqlParams = params.concat([(page - 1) * pageSize, pageSize])
 
     //查询数据总数
